@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI News Avatar – Dynamic UI</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    background: #f5f5f5;
+}
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 30px;
+}
+section {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 6px;
+    margin-top: 25px;
+}
+h2 {
+    margin-top: 0;
+}
+ul {
+    padding-left: 20px;
+}
+li {
+    margin-bottom: 10px;
+}
+.status {
+    font-weight: bold;
+}
+.loading {
+    color: orange;
+}
+.done {
+    color: green;
+}
+pre {
+    background: #f0f0f0;
+    padding: 15px;
+    white-space: pre-wrap;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📰 AI News Avatar Pipeline</h1>
+
+<button onclick="startPipeline()">▶ Generate News</button>
+
+<section>
+    <div id="pipelineStatus" class="status">Status: Idle</div>
+</section>
+
+<section>
+    <h2>🗞️ Scraped News</h2>
+    <ul id="articles"></ul>
+</section>
+
+<section>
+    <h2>🧠 Summaries</h2>
+    <ul id="summaries"></ul>
+</section>
+
+<section>
+    <h2>🎙️ News Script</h2>
+    <pre id="script">Not generated yet.</pre>
+</section>
+
+<section>
+    <h2>🎥 Avatar Video</h2>
+    <div id="video">Not generated yet.</div>
+</section>
+
+<script>
+async function startPipeline() {
+    setStatus("Scraping news...", "loading");
+    clearUI();
+
+    /* STEP 1: SCRAPE */
+    const scrapeRes = await fetch("/news/scrape");
+    const articles = await scrapeRes.json();
+    renderArticles(articles);
+    setStatus("News scraped ✔", "done");
+
+    /* STEP 2: SUMMARIZE */
+    setStatus("Summarizing articles...", "loading");
+    const summarizeRes = await fetch("/news/summarize", { method: "POST" });
+    const summaries = await summarizeRes.json();
+    renderSummaries(summaries);
+    setStatus("Summaries generated ✔", "done");
+
+    /* STEP 3: SCRIPT */
+    setStatus("Generating news script...", "loading");
+    const scriptRes = await fetch("/news/script", { method: "POST" });
+    const scriptData = await scriptRes.json();
+    document.getElementById("script").innerText = scriptData.script;
+    setStatus("Script ready ✔", "done");
+
+    /* STEP 4: VIDEO */
+    setStatus("Generating avatar video...", "loading");
+    const videoRes = await fetch("/news/video", { method: "POST" });
+    const videoData = await videoRes.json();
+    renderVideo(videoData);
+    setStatus("Pipeline completed 🎉", "done");
+}
+
+/* ---------- UI HELPERS ---------- */
+
+function setStatus(text, type) {
+    const el = document.getElementById("pipelineStatus");
+    el.innerText = "Status: " + text;
+    el.className = "status " + type;
+}
+
+function clearUI() {
+    document.getElementById("articles").innerHTML = "";
+    document.getElementById("summaries").innerHTML = "";
+    document.getElementById("script").innerText = "Not generated yet.";
+    document.getElementById("video").innerText = "Not generated yet.";
+}
+
+function renderArticles(articles) {
+    const ul = document.getElementById("articles");
+    articles.forEach(a => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${a.title}</strong><br>
+                        <a href="${a.url}" target="_blank">${a.url}</a>`;
+        ul.appendChild(li);
+    });
+}
+
+function renderSummaries(summaries) {
+    const ul = document.getElementById("summaries");
+    summaries.forEach(s => {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>${s.title}</strong><br>${s.summary}`;
+        ul.appendChild(li);
+    });
+}
+
+function renderVideo(video) {
+    const div = document.getElementById("video");
+    if (video.video_url) {
+        div.innerHTML = `<a href="${video.video_url}" target="_blank">
+                         ▶ Open Avatar Video</a>`;
+    } else {
+        div.innerText = "Video generation failed.";
+    }
+}
+</script>
+
+</body>
+</html>
