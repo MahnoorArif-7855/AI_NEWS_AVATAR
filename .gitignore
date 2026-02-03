@@ -9,9 +9,7 @@ __pycache__/
 # Environment variables
 .env
 
-# Data & outputs (generated locally)
-data/
-outputs/
+
 
 # OS files
 .DS_Store

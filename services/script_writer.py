@@ -18,17 +18,17 @@ def generate_script(summaries_text: str) -> str:
             {
                 "role": "user",
                 "content": f"""
-Write a professional news anchor script from the following summaries.
+                Write a professional news anchor script from the following summaries.
 
-Requirements:
-- 30–45 seconds spoken length
-- Professional, conversational tone
-- Start with a greeting and top headlines
-- Mention each story once
-- End with a short closing line
+                Requirements:
+                - 30–45 seconds spoken length
+                - Professional, conversational tone
+                - Start with a greeting and top headlines
+                - Mention each story once
+                - End with a short closing line
 
-Summaries:
-{summaries_text}
+                Summaries:
+                {summaries_text}
 """
             }
         ],

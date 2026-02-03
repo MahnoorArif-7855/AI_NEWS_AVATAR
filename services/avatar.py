@@ -3,15 +3,12 @@ import requests
 import time
 from base64 import b64encode
 
-# It's best to store the raw key in env; we will encode it in the script
 DID_API_KEY = os.getenv("DID_API_KEY") 
 
 def generate_avatar_video(script_text: str):
-    # Endpoint for V3 Pro Avatars is /clips
+
     url = "https://api.d-id.com/clips"
     
-    # D-ID uses Basic Auth: base64(api_key:password)
-    # Most users just use the API key as the username and leave password blank
     auth_str = f"{DID_API_KEY}:"
     encoded_auth = b64encode(auth_str.encode()).decode()
 
@@ -24,7 +21,6 @@ def generate_avatar_video(script_text: str):
                 "voice_id": "en-US-JennyNeural"
             }
         },
-        # Use a high-quality Pro Presenter ID for Step 4 requirements
         "presenter_id": "v2_public_Amber@0zSz8kflCN", 
         "config": {
             "result_format": "mp4",
@@ -43,7 +39,6 @@ def generate_avatar_video(script_text: str):
         "accept": "application/json"
     }
 
-    # 1. Start the generation
     response = requests.post(url, json=payload, headers=headers)
     response.raise_for_status()
     data = response.json()
@@ -51,8 +46,6 @@ def generate_avatar_video(script_text: str):
     
     print(f"Video queued successfully. ID: {clip_id}")
 
-    # 2. Polling for the final video URL (Required for Step 4 deliverables)
-    # In a real FastAPI app, you might do this in a Background Task
     max_retries = 30
     for i in range(max_retries):
         status_url = f"{url}/{clip_id}"
@@ -63,7 +56,7 @@ def generate_avatar_video(script_text: str):
             return {
                 "video_id": clip_id,
                 "status": "completed",
-                "video_url": status_data.get("result_url"), # Direct link to .mp4
+                "video_url": status_data.get("result_url"), 
                 "metadata": status_data.get("metadata")
             }
         elif status_data.get("status") == "failed":
