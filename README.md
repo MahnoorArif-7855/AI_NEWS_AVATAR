@@ -90,6 +90,7 @@ uvicorn main:app --reload
 
 ## 📁 Project Structure
 
+```bash
 ai_news_avatar/
 ├── app/
 │   ├── main.py
@@ -104,8 +105,8 @@ ai_news_avatar/
 ├── data/
 ├── outputs/
 ├── requirements.txt
-└── README.md
-
+└── README.md`
+```
 ---
 
 ## ✅ Outcome
