@@ -19,8 +19,8 @@ NEWS_URLS = [
     "https://www.theguardian.com/world/live/2026/feb/03/russia-ukraine-europe-live-eu-us-military-plan-response-latest-news",
     "https://www.aljazeera.com/",
     "https://www.independent.co.uk/news/world/europe/",
-    "https://www.freshnews.org/"
-    "https://www.skysports.com/news-wire",
+    "https://www.independent.co.uk/sport/football/",
+"https://www.theguardian.com/world/2026/feb/03/thousands-without-heating-ukraine-russia-winter-attacks-before-talks",    "https://www.theguardian.com/world/asia"
 ]
 
 templates = Jinja2Templates(directory="templates")
